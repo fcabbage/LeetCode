@@ -581,9 +581,9 @@ publie int findKthLargest(int[] nums, int k) {
 	int left = 0, right = nums.length - 1, targetIndex = nums.length - k;
 	while (left <= right) {
 		int pivot = partition(nums, left, right);
-		if (pivot == target) {
+		if (pivot == targetIndex) {
 			return pivot;
-		} else if (pivot < target) {
+		} else if (pivot < targetIndex) {
 			left = pivot + 1;
 		} else {
 			right = pivot - 1;
