@@ -1,0 +1,38 @@
+###数组中第k个最大元素
+##eg: [3,2,1,5,6,4], k = 2, 输出5；[3,2,3,1,2,4,5,5,6], k = 4, 输出4
+##关键在于理解题目，第k个最大元素，也就是排序后的nums[nums.length - k];
+##涉及到排序，假如考虑快排
+public int findKthLargest(int[] nums, int k) {
+	// 结合二分查找，有序就直接二分查找，无序mid就替换为partition
+	int left = 0, right = nums.length - 1, targetIndex = nums.length - k;
+	while (left <= right) {
+		int pivot = partition(nums, left, right);
+		if (pivot == targetIndex) {
+			return pivot;
+		} else if (pivot < targetIndex) {
+			left = pivot + 1;
+		} else {
+			right = pivot - 1;
+		}
+	}
+	return -1;
+}
+##分区方法和之前保持一致，记住某个模板，遇到变种直接改
+private int partition(int[] nums, int low, int high) {
+	int pivotValue = nums[high];
+	int left = low, right = high - 1;
+	while (left <= right) {
+		while (left <= right && nums[left] <= pivotValue) {
+			left++;
+		}
+		while (left <= right && nums[right] >= pivotValue) {
+			right--;
+		}
+		if (left < right) {
+			swap(nums, left, right);
+		}
+	}
+	nums[left] = pivotValue;
+	nums[high] = nums[left];
+	return left;
+}

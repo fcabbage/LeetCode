@@ -1,0 +1,156 @@
+###链表
+public Class Node {
+	int val;
+	Node next;
+	public Node() {
+	}
+	public Node(int val) {
+		this.val = val;
+	}
+}
+##合并两个有序链表
+#递归
+public Node merge(Node headA, Node headB) {
+	if (headA == null) {
+		return headB;
+	}
+	if (headB == null) {
+		return headA;
+	}
+	if (headA.val < headB.val) {
+		headA.next = merge(headA.next, headB);
+		return headA;
+	} else {
+		headB.next = merge(headA, headB.next);
+		return headB;
+	}
+}
+#迭代
+public Node merge(Node headA, Node headB) {
+	Node dummy = new Node(-1);
+	Node cur = dummy;
+	Node curA = headA, curB = headB;
+	while (curA != null && curB != null) {
+		if (curA.val < curB.val) {
+			cur.next = curA;
+			curA = curA.next;
+		} else {
+			cur.next = curB;
+			curB = curB.next;
+		}
+		cur = cur.next;
+	}
+	cur.next = curA == null ? curB : curA;
+	return dummy.next;
+}
+##反转链表
+public Node reverse(Node head) {
+	Node cur = head, pre = null;
+	while (cur != null) {
+		Node tmp = cur.next;
+		cur.next = pre;
+		pre = cur;
+		cur = tmp;
+	}
+	return pre;
+}
+##获取链表中间节点
+public Node getMid(Node head) {
+	if (head == null) {
+		return null;
+	}
+	Node slow = head, fast = head;
+	while (fast != null && fast.next != null) {
+		slow = slow.next;
+		fast = fast.next.next;
+	}
+	return slow; // 中间偏右
+}
+##是否有环
+public boolean getMid(Node head) {
+	if (head == null) {
+		return null;
+	}
+	Node slow = head, fast = head;
+	while (fast != null && fast.next != null) {
+		slow = slow.next;
+		fast = fast.next.next;
+		if (slow == fast) {
+			return true;
+		}
+	}
+	return false;
+}
+##环的入口
+public Node getMid(Node head) {
+	if (head == null) {
+		return null;
+	}
+	Node slow = head, fast = head;
+	while (fast != null && fast.next != null) {
+		slow = slow.next;
+		fast = fast.next.next;
+		if (slow == fast) {
+			Node tmp = head;
+			while (tmp != slow) {
+				tmp = tmp.next;
+				slow = slow.next;
+			}
+			return slow;
+		}
+	}
+	return null;
+}
+##是否回文链表
+#eg: 1,2,3,2,1
+Node front;
+
+public boolean isPalindrome(Node head) {
+	front = head;
+	return dfs(head);
+}
+
+public boolean dfs(Node head) {
+	if (head == null) {
+		return true;
+	}
+	// 递归到最后一个节点
+	if (!dfs(head)) {
+		return false;
+	}
+	if (head.val != front.val) {
+		return false;
+	}
+	front = front.next;
+	return true;
+}
+##链表相交
+public Node getIntersectNode(Node headA, Node headB) {
+	if (headA == null || headB == null) {
+		return null;
+	}
+	Node curA = headA, curB = headB;
+	while (curA != curB) {
+		curA = curA == null ? headB : curA.next;
+		curB = curB == null ? headA : curB.next;
+	}
+	return curA;
+}
+##链表奇偶下标移动一起
+#eg 1,2,3,4,5 -> 1,3,5,2,4
+public Node removeOddAndEven(Node head) {
+	if (head == null) {
+		return null;
+	}
+	Node odd = head;
+	Node evenHead = head.next;
+	Node even = evenHead;
+	while (even != null && even.next != null) {
+		odd.next = even.next;
+		odd = odd.next;
+		even.next = odd.next;
+		even = even.next;
+	}
+	odd.next = evenHead;
+	return head;
+}

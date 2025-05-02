@@ -1,0 +1,48 @@
+###双指针
+##接雨水
+public int getDrops(int[] height) {
+	int res = 0;
+	int left = 0, right = height.length - 1;
+	int maxLeft = 0, maxRight = 0;
+	while (left < right) {
+		maxLeft = Math.max(maxLeft, height[left]);
+		maxRight = Math.max(maxRight, height[right]);
+		if (maxLeft < maxRight) {
+			res += maxLeft - height[left];
+			left ++;
+		} else {
+			res += maxRight - height[right];
+			right ++;
+		}
+	}
+}
+
+##盛最多的水
+public int maxArea(int[] height) {
+	int res = 0;
+	int left = 0, right = height.length - 1;
+	while (left < right) {
+		int curArea = Math.min(height[left], height[right]) * (right - left);
+		res = Math.max(res, curArea);
+		if (height[left] < height[right]) {
+			left++;
+		} else {
+			right--;
+		}
+	}
+	return res;
+}
+
+##判断回文字符串
+public boolean isPalindrome(String str) {
+	if (str == null) {
+		return false;
+	}
+	int left = 0, right = str.length() - 1;
+	while (left < right) {
+		if (str.charAt(left++) != str.charAt(right--)) {
+			return false;
+		}
+	}
+	return true;
+}

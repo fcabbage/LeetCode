@@ -1,0 +1,21 @@
+###滑窗
+##无重复的最长字串
+public int lengthOfSubstring(String str) {
+	int res = 0;
+	if (str == null) {
+		return res;
+	}
+	Set<Character> set = new HashSet<>();
+	int left = 0, right = 0;
+	while (right < str.length()) {
+		char cur = str.charAt(right);
+		while(set.contains(cur)) {
+			set.remove(str.charAt(left));
+			left++;
+		}
+		set.add(cur);
+		res = Math.max(res, set.size());
+		// res = Math.max(res, right - left + 1);
+		right++;
+	}
+}

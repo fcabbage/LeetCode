@@ -1,0 +1,120 @@
+public Class TreeNode {
+	int val;
+	TreeNode left;
+	TreeNode right;
+	public TreeNode() {
+	}
+	public TreeNode(int val) {
+		this.val = val;
+	}
+}
+
+#前中后遍历-递归
+List<Ingeter> res = new ArrayList<>();
+
+public void pre(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	res.add(root.val);
+	pre(root.left);
+	pre(root.right);
+}
+
+public void in(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	pre(root.left);
+	res.add(root.val);
+	pre(root.right);
+}
+
+public void post(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	pre(root.left);
+	pre(root.right);
+	res.add(root.val);
+}
+
+#前中后遍历-迭代
+public void pre(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	Stack<TreeNode> stack = new Stack<>();
+	stack.push(root);
+	while (!stack.isEmpty()) {
+		TreeNode cur = stack.pop();
+		res.add(cur.val);
+		if (cur.right != null) stack.push(cur.right);
+		if (cur.left!= null) stack.push(cur.left);
+	}
+}
+
+public void in(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	Stack<TreeNode> stack = new Stack<>();
+	TreeNode cur = root;
+	while (cur != null || !stack.isEmpty()) {
+		if (cur != null) {
+			stack.push(cur);
+			cur = cur.left;
+		}
+		cur = stack.pop();
+		res.add(cur.val);
+		cur = cur.right;
+	}
+}
+
+public void post(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	Stack<TreeNode> stack = new Stack<>();
+	stack.push(root);
+	while (!stack.isEmpty()) {
+		TreeNode cur = stack.pop();
+		// 处理的顺序为中右左，反过来刚好为后序
+		res.add(cur.val);
+		if (cur.left!= null) stack.push(cur.left);
+		if (cur.right != null) stack.push(cur.right);
+	}
+	Collections.reverse(res);
+}
+
+#层序遍历
+public void sequence(TreeNode root) {
+	if (root == null) {
+		return;
+	}
+	LinkedList<TreeNode> queue = new LinkedList<>();
+	queue.add(root);
+	while (!queue.isEmpty()) {
+		LinkedList<TreeNode> tmp = new LinkedList<>();
+		for (TreeNode cur : queue) {
+			if (cur.left!= null) tmp.add(cur.left);
+			if (cur.right != null) tmp.add(cur.right);
+			res.add(cur.val);
+		}
+		queue = tmp;
+	}
+}
+
+##叠加两个二叉树
+public TreeNode merge(TreeNode rootA, TreeNode rootB) {
+	if (rootA == null) {
+		return rootB;
+	}
+	if (rootB == null) {
+		return rootA;
+	}
+	TreeNode root = new TreeNode(rootA.val + rootB.val);
+	root.left = merge(rootA.left, rootB.left);
+	root.right = merge(rootA.right, rootB.right);
+	return root;
+}
