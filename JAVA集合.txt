@@ -1,0 +1,9 @@
+###队列
+  add/remove：抛异常
+  offer/poll：返回布尔，不抛异常
+  put/take：适用于阻塞队列    
+
+  举例：
+  对于LinkedBlokingDeque来说，主要是link和unlink，同时维护着1个全局锁lock和2个condition：notEmpty和notFull；
+  每次link，会唤醒/通知notEmpty，如果队列满了，notFull会await阻塞
+  每次unlink，会唤醒/通知notFull，如果队列空了，notEmpty会await阻塞
