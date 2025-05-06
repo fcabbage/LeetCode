@@ -8,7 +8,7 @@ public int findKthLargest(int[] nums, int k) {
 	while (left <= right) {
 		int pivot = partition(nums, left, right);
 		if (pivot == targetIndex) {
-			return pivot;
+			return nums[pivot];
 		} else if (pivot < targetIndex) {
 			left = pivot + 1;
 		} else {
