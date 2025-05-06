@@ -7,3 +7,37 @@
   对于LinkedBlokingDeque来说，主要是link和unlink，同时维护着1个全局锁lock和2个condition：notEmpty和notFull；
   每次link，会唤醒/通知notEmpty，如果队列满了，notFull会await阻塞
   每次unlink，会唤醒/通知notFull，如果队列空了，notEmpty会await阻塞
+
+###列表
+
+##ArrayList
+数组实现
+
+##CopyOnWriteArrayList
+copyOf实现，写加锁；读不加；适用于读多写少
+
+##LinkedList
+双向链表，fist/last/prev/next
+
+##HashMap
+数组+链表/红黑树
+链表长度到达8的阈值，总量到达64的阈值时，开始转换红黑树
+操作都是：
+  先定位，命中后，判断hash和==
+    等于：直接操作
+    不等: 遍历树或者链表
+
+##ConcurrentHashMap
+不允许kv空，节点加锁（jdk8以后），基本操作和普通map没差别
+扩容或者说树化操作不在链表中了，在最后，同步代码之外
+扩容使用cas自旋，树化对节点加锁
+
+##红黑树
+自平衡的BST，靠红黑的定义保持平衡
+BST：左 < 中 < 右 或者反之
+根为黑，所有(包括null)的叶子节点为黑，红色节点不能相连，任意子树到其叶子的黑节点数量相同(黑高)
+
+##B树和B+树
+多路平衡查找树
+B树：非叶子节点存储数据，现今用途较少
+B+树：非叶子节点只存储key，数据都在叶子节点，叶子节点同时也是双向链表，查找时间平均/稳定
