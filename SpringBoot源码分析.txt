@@ -1,0 +1,38 @@
+###SpringBoot的启动过程
+首先了解下fatjar的概念，如果不是手动排除maven插件，SpringBoot从2.3开始，其父pom都是自带了该插件的；
+fatjar会将主程序和依赖的jar统一打成一个单独的jar，jar中还有jar，还有一些清单文件；
+java自带的类加载器是无法加载这些嵌套jar包的，所以spring自己实现了一个LaunchedURLClassLoader，用于解析嵌套jar包；
+对于这种jar包，清单文件，会包含Main-Class和Start-Class
+  main class就是JarLauncher（如果打包方式是zip，就是另外一个类）
+  start class就是业务的主类
+再回到启动类： 
+  如果是开发调试阶段，比如用idea启动，启动类就是业务的主类
+  如果是部署阶段，java -jar部署，启动类就是JarLauncher，由JarLauncher反射调用业务类的main函数
+
+##业务主类的启动过程
+主要就是组装主容器ApplicationContext（ConfigurableApplicationContext，后续还有其子容器WebApplicationContext，@Controller在该容器中，子容器可以访问父容器，所以@Controller可以访问@Service，而@Service无法访问@Controller）
+推断应用类型，是web还是响应式还是普通程序
+
+#核心部分-bean的加载
+bean也分为特殊bean和普通bean
+  像主类那种，就是特殊bean，会在较早的阶段就加载进BeanDefinitionMap；
+  还有一些接口，也是特殊bean；
+    BeanFactoryPostProcessor Bean工厂后置处理器，其中BeanDefinitionRegistryPostProcessor继承自BeanFactoryPostProcessor；
+      BeanFactoryPostProcessor的优先级为BeanFactoryPostProcessor > 实现了PriorityOrder > 实现了Order > 普通的BeanFactoryPostProcessor；
+      其中ConfigurationClassPostProcessor的优先级最高，其作用就是去执行包扫描，将@Component @Import（不包括@Controller）等注解的类加载到BeanDefinitionMap；
+      上面加载的配置类称之为显示配置类，还有自动配置类，也就是SpringBoot的自动装配
+        当扫到主类中@Import(AutoConfigurationImportSelector.class)时，AutoConfigurationImportSelector为DeferredImportSelector（延迟导入）的实现类；
+        ConfigurationClassParser会在所有显示配置类执行后，执行selectImports，selectImports会扫META-INF/spring.factories（Spring自己写的SPI机制）中EnableAutoConfiguration的values，也就是自动配置类；
+      由于上述ConfigurationClassPostProcessor已经加载了绝大多数的bean定义，所以剩下的BeanFactoryPostProcessor有个主要作用，就是在bean实例化之前，去修改bean的定义
+    BeanPostProcessor Bean后置处理器，有befor和after后置处理的两个方法，分别在@PostConstruct和afterPropertiesSet前后执行
+      AbstractAutoProxyCreator：特殊的BeanPostProcessor，其after方法会在bean初始化后，判断该bean满不满足aop的条件，如果满足，会自动创建代理
+        spring的aop代理分为两种，jdk和cglib
+          jdk方式要求代理类实现了某个接口，jdk具体改接口生成代理类；
+          cglib是现在的默认方式，cglib通过实现目标类的子类，生成代理类，不是final就行；
+        aop执行顺序：aop around包围aop before/after包围aop returning/throwing；
+    Bean的生命周期
+      实例化、@PostConstrut、InializingBean.afterPropertiesSet、@PreDestory、DispoableBean.destory
+
+#内置tomcat启动
+
+#ApplicationRunner/CommandRunner
