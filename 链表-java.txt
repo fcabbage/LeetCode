@@ -165,11 +165,11 @@ public Node removeKthFromEnd(Node head, int k) {
 	Node dummy = new Node(-1);
 	dummy.next = head;
 	Node left = head;
-	Node right = head;
+	Node right = dummy;
 	int count = 0;
 	while (count < k) {
 		right = right.next;
-		right++;
+		count++;
 	}
 	while (right != null) {
 		left = left.next;
