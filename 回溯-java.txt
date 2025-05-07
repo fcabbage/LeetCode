@@ -29,7 +29,8 @@ private void backTrack(List<String> res, StringBuilder curRes, int index, Map<Ch
   for (int i = 0; i < letters.length; i++) {
     curRes.append(letter.charAt(i));
     backTrack(res, curRes, index + 1, numberLetterMap, digits);
-    // 回溯的时候是删除当前结果的末尾元素
+    // 回溯的时候是删除当前结果的末尾元素，不是i，这里的结果末尾就是index，其他题目可能是list之类的，就删去size-1上的元素
+    // curRes最终的长度也是等于index，i只是每个index上的可能元素，看着for循环像是一直在添加元素，实际每次都被消除了
     curRes.deleteCharAt(index);
   }
 }
