@@ -1,0 +1,35 @@
+###17.电话号码的数字组合
+public List<String> letterCombinations(String digits) {
+  List<String> res = new ArrayList<>();
+  if (null == digits || digits.length == 0) return res;
+  Map<Character, String> numberLetterMap = new HashMap<>();
+  numberLetterMap.put('2',"abc");
+  numberLetterMap.put('3',"def");
+  numberLetterMap.put('4',"ghi");
+  numberLetterMap.put('5',"jkl");
+  numberLetterMap.put('6',"mno");
+  numberLetterMap.put('7',"pqrs");
+  numberLetterMap.put('8',"tuv");
+  numberLetterMap.put('9',"wxyz");
+  backTrack(res, new StringBuilder(), 0, numberLetterMap, digits);
+  return res;
+}
+
+// 回溯通用模板
+// res用于收集结果
+// curRes用于收集当前结果，也就是单个的结果
+private void backTrack(List<String> res, StringBuilder curRes, int index, Map<Character, String> numberLetterMap, String digits) {
+  // 收集条件到了，直接返回
+  if (index == digits.length) {
+    res.add(curRes.toString());
+    return;
+  }
+  char digit = digits.charAt(index);
+  String letters = numberLetterMap.get(digit);
+  for (int i = 0; i < letters.length; i++) {
+    curRes.append(letter.charAt(i));
+    backTrack(res, curRes, index + 1, numberLetterMap, digits);
+    // 回溯的时候是删除当前结果的末尾元素
+    curRes.deleteCharAt(index);
+  }
+}
