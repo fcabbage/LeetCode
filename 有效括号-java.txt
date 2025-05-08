@@ -1,0 +1,32 @@
+###给定字符串，里面只有括号，判断括号是否有效
+##eg: "([{}])"
+public boolean isVaild(String s) {
+  if (s == null) {
+    return true;
+  }
+  int n = s.length;
+  if (n % 2 == 1) {
+    return false;
+  }
+  Map<Character, Character> map = new HashMap<>();
+  // key为右括号
+  map.put(')', '(');
+  map.put(']', '[');
+  map.put('}', '{');
+  // stack只存放左括号
+  Stack<Character> stack = new Stack<>();
+  for (int i = 0; i < n; i++) {
+    char c = s.charAt(i);
+    if (map.containsKey(c)) {
+      if (stack.isEmpty() || map.get(c) != stack.peek()) {
+        return false;
+      }
+      // 处理完当前括号对，弹出对应的左括号
+      stack.pop();
+    } else {
+      stack.push(c);
+    }
+  }
+  // stack为空，说明刚好处理完
+  return stack.isEmpty();
+}
