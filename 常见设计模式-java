@@ -1,0 +1,82 @@
+###单例模式
+public class Singleton {
+  private static volatile Singleton instance;
+
+  private Singleton() {};
+
+  public static Singleton getInstance() {
+    // 第一个if避免频繁进入锁竞争
+    if (instance == null) {
+      Synchronized(Singleton.class) {
+        // 第二个if避免已经进入锁竞争的其他线程在当前线程退出锁的时候，再次进行实例化
+        if (instance == null) {
+          instance = new Singleton();
+        }
+      }
+    }
+    return instance;
+  }
+}
+
+public class Singleton {
+  private Singleton() {};
+
+  private static class Holder {
+    private static final Singleton INSTANCE = new Singleton();
+  }
+
+  public static Singleton getInstance() {
+    return Holder.INSTANCE;
+  }
+}
+
+###代理模式
+public class Target {
+
+  public Target() {};
+
+  public void doSomething() {};
+  
+}
+// 实际中，proxy和target的关系可以更丰富，可以是子类，可以实现同一个接口等
+public class Proxy {
+  private Target target;
+  public Proxy(Target target) {
+    this.target = target;
+  }
+
+  public void doSomething() {
+    System.out.println("before");
+    target.doSomething();
+    System.out.println("before");
+  };
+}
+
+###简单工厂模式
+public interface Product {
+
+  doSomething();
+
+}
+
+public class ProductA implements Product {
+
+  doSomething() { System.out.println("A"); }
+
+}
+
+public class ProductB implements Product {
+
+  doSomething() { System.out.println("B"); }
+
+}
+
+public class Factory(String type) {
+  if ("A".equals(type)) {
+    return new ProductA();
+  } else if ("B".equals(type)) {
+    return new ProductB();
+  } else {
+    throw new RuntimeException("unknown type");
+  }
+}
