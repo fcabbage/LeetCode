@@ -1,0 +1,24 @@
+###现场JAVA应用CPU/内存过高，如何排查
+1.top命令可以查看到对应的进程ID，甚至是线程ID（jps -l 命令也可以找到java的进程）
+
+2.jstack <PID>查看线程的堆栈信息，可以看到一堆daemon线程的信息，可以把daemon线程的信息过滤掉
+
+3.看看死循环、锁竞争
+
+4.jstat -gcutil <PID>; 常用来查看老年代是否爆满 或者 fullgc是否过于频繁
+S0	Survivor 0 区使用率（百分比）
+S1	Survivor 1 区使用率
+E	Eden 区使用率
+O	Old(old gen)区使用率
+M	Metaspace(元空间)使用率
+CCS	Compressed Class Space百分比
+YGC	Young GC（新生代GC）次数
+YGCT	Young GC 总耗时（秒）
+FGC	Full GC（老年代GC）次数
+FGCT	Full GC 总耗时（秒）
+GCT	GC 总耗时（秒）
+
+5.jmap查看内存的使用信息，也可以转储dump文件，用jprofile分析
+内存泄漏：对象被意外引用（某些资源未关闭）
+jvm堆内存是否分配过小
+内存溢出：大对象(比如CSP一次性把OSS的sdk下到内存)
