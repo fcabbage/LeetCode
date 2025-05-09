@@ -34,3 +34,32 @@ private void backTrack(List<String> res, StringBuilder curRes, int index, Map<Ch
     curRes.deleteCharAt(index);
   }
 }
+
+
+###22.括号生成
+##给定n，生成所有可能的括号对，只有小括号()
+public List<String> generate(int n) {
+    List<String> res = new ArrayList<>();
+    backTrack(res, new StringBuilder(), 0, 0, n);
+    return res;
+}
+
+private void backTrack(List<String> res, StringBuilder curRes, int left, int right, int n) {
+  if (curRes.length() == n * 2) {
+    res.add(curRes.toString());
+    return;
+  }
+  // 下一次生成括号不是左就是右，只有两种选择，无需for，用两个if判断什么时候填充左，什么时候填充右
+  // 只要左括号数小于n，就可以一直填充左括号
+  // 右括号则需要小于左括号，此时左边已经有一定数量的左括号了，直接在右边填充即可
+  if (left < n) {
+    curRes.append("(");
+    backTrack(res, curRes, left + 1, right, max);
+    curRes.deleteCharAt(curRes.length() - 1);
+  }
+  if (right < left) {
+    curRes.append(")");
+    backTrack(res, curRes, left, right + 1, max);
+    curRes.deleteCharAt(curRes.length() - 1);
+  }
+}
