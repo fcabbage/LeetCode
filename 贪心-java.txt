@@ -1,0 +1,16 @@
+###55.跳跃游戏
+##给定数组nums，nums[i]表示当前可以跳跃的最大位置，判断是否能跳到最后
+#eg：[2,3,1,1,4] true [3,2,1,0,4] false
+public boolean check(int[] nums) {
+  // 假设第一步最大可以跳3步，同时意味着可以跳0/1/2步
+  // 每遍历一次就尝试更新可以走到的最大位置
+  // 如果遍历到某步，结果最大可达到位置还小于该步，就可以直接退出了
+  // 再说白点，就是每步需要着重判断等于0的情况，如果每个位置都大于0，肯定可以走到最后
+  int curMaxPosition = 0;
+  for (int i = 0; i < nums.length; i++) {
+    // 没走到末尾，结果当前可以到达的最大位置的可跳步数为0，下一次就走不动了
+    if (i > curMaxPosition) return false;
+    curMaxPosition = Math.max(curMaxPosition, i + nums[i]);
+  }
+  return true;
+} 
