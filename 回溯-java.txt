@@ -63,3 +63,31 @@ private void backTrack(List<String> res, StringBuilder curRes, int left, int rig
     curRes.deleteCharAt(curRes.length() - 1);
   }
 }
+
+###39.组合总数
+##给定candidates数组和target，找到数组中元素和等于target的解，元素可以重复
+public List<List<Integer>> getCombinations(int[] candidates, int target) {
+  List<List<Integer>> res = new ArrayList<>();
+  int n = candidates.length;
+  if (n == 0) {
+    return res;
+  }
+  backTrack(res, new ArrayList<>(), 0, target, n, candidates);
+  return res;
+}
+
+private void backTrack(List<List<Integer>> res, List<Integer> curRes, int index, int target, int n, int[] candidates) {
+  if (target < 0) {
+    return;
+  }
+  if (target == 0) {
+    res.add(new ArrayList<>(curRes));
+    return;
+  }
+  for (int i = index; i < n; i++) {
+    curRes.add(candidates[i]);
+    backTrack(res, curRes, i, target - candidates[i], n, candidates);
+    curRes.remove(curRes.size() - 1);
+  }
+}
+
