@@ -122,3 +122,29 @@ private void backTrack(List<List<Integer>> res, List<String> curRes, int index, 
     Collections.swap(curRes, i, index);
   }
 }
+
+###78.子集
+##输入nums[]，输出所有的子集，包括空集
+public List<List<Integer>> getSubsets(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+    int n = nums.length;
+    if (n == 0) {
+      res.add(new ArrayList<>());
+      return res;
+    }
+    backTrack(res, new ArraList<>(), 0, n, nums);
+    return res;
+}
+
+private void backTrack(List<List<Integer>> res, List<Integer> curRes, int index, int n, int[] nums) {
+  if (index < n) { // 也可以不写if，为了形成固定模板，还是写上
+    res.add(new ArrayList<>(curRes));
+  }
+  for (int i = index; i < n; i++) {
+    curRes.add(nums[i]);
+    backTrack(res, curRes, i + 1, n, nums);
+    curRes.remove(curRes.size() - 1);
+  }
+}
+
+###79.单词搜索
